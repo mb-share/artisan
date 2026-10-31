@@ -136,10 +136,31 @@ footer p{margin:0 0 6px}
 
 <script>
 /* ---- The only block that changes between updates. Newest first. ---- */
-var UPDATED = "21 October 2026";
+var UPDATED = "31 October 2026";
 
 /* live: false keeps a post off the page until it is published. */
 var POSTS = [
+  {
+    live: true,
+    title: "Halloween at Artisan",
+    blurb: "Ring toss, real worms, a pumpkin contest and a costume parade, in under a minute.",
+    img: "img/post-halloween-reel.jpg",
+    posted: "31 October",
+    fb: "https://www.facebook.com/reel/1803671337414767/",
+    li: false,
+    ig: "",
+    lines: [
+      "Wait for the snarl.",
+      "Congrats Theo and Jay on the ring toss win!",
+      "Still thinking about those worms.",
+      "Our costume game did not disappoint 🎃"
+    ],
+    comments: [
+      "That snarl!",
+      "Love the pumpkins!",
+      "Happy Halloween!"
+    ]
+  },
   {
     live: true,
     title: "Golf Tournament Highlight Reel",
@@ -302,15 +323,24 @@ function lineList(items, label){
   return box;
 }
 
-function howTo(){
+function linesLabel(p){
+  return p.li === false
+    ? "Want to add a line when you share on Facebook? Use one of these, or write your own:"
+    : "Use one of these for LinkedIn, or write your own:";
+}
+
+function howTo(p){
   var d = el("div", "how");
   var p1 = el("p");
-  p1.innerHTML = "<strong>Facebook:</strong> tap Share, then Share to News Feed. Nothing to write.";
+  p1.innerHTML = p.li === false
+    ? "<strong>Facebook:</strong> tap Share, then Share to News Feed. Add a line below if you like."
+    : "<strong>Facebook:</strong> tap Share, then Share to News Feed. Nothing to write.";
   var p2 = el("p");
   p2.innerHTML = "<strong>LinkedIn:</strong> tap Repost, then pick Repost with your thoughts rather than the plain repost. Adding a line of your own is what puts it in front of people who know you.";
   var p3 = el("p");
   p3.innerHTML = "<strong>Instagram:</strong> like it and leave a comment. Both help it reach more people.";
-  d.appendChild(p1); d.appendChild(p3); d.appendChild(p2);
+  d.appendChild(p1); d.appendChild(p3);
+  if (p.li !== false) d.appendChild(p2);
   return d;
 }
 
@@ -329,12 +359,12 @@ function renderHero(p){
   var row = el("div", "btnrow");
   row.appendChild(linkBtn(p.fb, "Open on Facebook"));
   if (p.ig) row.appendChild(linkBtn(p.ig, "Open on Instagram"));
-  row.appendChild(linkBtn(p.li, "Open on LinkedIn"));
+  if (p.li !== false) row.appendChild(linkBtn(p.li, "Open on LinkedIn"));
   body.appendChild(row);
-  body.appendChild(howTo());
+  body.appendChild(howTo(p));
 
   if (p.lines && p.lines.length) {
-    body.appendChild(lineList(p.lines, "Use one of these for LinkedIn, or write your own:"));
+    body.appendChild(lineList(p.lines, linesLabel(p)));
   }
   if (p.comments && p.comments.length) {
     body.appendChild(lineList(p.comments, "A comment helps just as much:"));
@@ -362,9 +392,9 @@ function renderRow(p){
   var row = el("div", "btnrow");
   row.appendChild(linkBtn(p.fb, "Facebook", true));
   if (p.ig) row.appendChild(linkBtn(p.ig, "Instagram", true));
-  row.appendChild(linkBtn(p.li, "LinkedIn", true));
+  if (p.li !== false) row.appendChild(linkBtn(p.li, "LinkedIn", true));
   body.appendChild(row);
-  if (p.lines && p.lines.length) body.appendChild(lineList(p.lines, "Use one of these for LinkedIn, or write your own:"));
+  if (p.lines && p.lines.length) body.appendChild(lineList(p.lines, linesLabel(p)));
   if (p.comments && p.comments.length) body.appendChild(lineList(p.comments, "A comment helps just as much:"));
   d.appendChild(body);
   return d;
